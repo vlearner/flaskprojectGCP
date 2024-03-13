@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -9,4 +11,5 @@ def index():  # put application's code here
 
 
 if __name__ == '__main__':
-    app.run()
+    server_port = os.environ.get('PORT', '8080')
+    app.run(debug=False, port=server_port, host='0.0.0.0')
