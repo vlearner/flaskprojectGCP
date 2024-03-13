@@ -1,13 +1,19 @@
-FROM python:3.12-slim
+# Python image to use.
+FROM python:3.12-alpine
+
+# Set the working directory to /app
+WORKDIR /app
+
+# copy the requirements file used for dependencies
+COPY requirements.txt .
 
 ENV PYTHONUNBUFFERED True
 
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-COPY . ./
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the rest of the working directory contents into the container at /app
+COPY . .
 
-CMD exec gunicorn --bind :$gPORT --workers 1 --threads 8 --timeout 0 main:app
-
-app:app
+# Run app.py when the container launches
+ENTRYPOINT ["python", "app.py"]
